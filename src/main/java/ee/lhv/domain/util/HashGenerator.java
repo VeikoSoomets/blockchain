@@ -1,9 +1,15 @@
 package ee.lhv.domain.util;
 
 import ee.lhv.domain.block.Block;
-import static org.apache.commons.codec.digest.DigestUtils.sha256Hex;
 
+/**
+ * HashGenerator component is responsible for creating a hash for the block component.
+ *
+ * @author Veiko Soomets
+ */
 public class HashGenerator {
+
+    // TODO: Should be implemented
     public static String createHash(Block block) {
         return null;
     }

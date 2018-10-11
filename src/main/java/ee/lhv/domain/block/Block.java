@@ -8,8 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * This is the block component which holds an index, a timestamp (in Unix time), a list of transactions, a proof,
- * and the hash of the previous block.
+ * This is the block component which holds an index, a timestamp (in Unix time), a list of transactions, a proof and the hash of the
+ * previous block.
  *
  * @author Veiko Soomets
  */

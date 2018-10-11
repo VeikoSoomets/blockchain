@@ -6,6 +6,11 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * This is the chain component which holds the information about all the blocks inn the blockchain.
+ *
+ * @author Veiko Soomets
+ */
 @Getter
 @Setter
 public class Chain {
@@ -23,6 +28,7 @@ public class Chain {
         blocks.add(block);
     }
 
+    // TODO: Should be implemented
     public boolean isValidBlock() {
         return false;
     }

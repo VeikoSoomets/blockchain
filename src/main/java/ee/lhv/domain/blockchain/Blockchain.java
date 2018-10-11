@@ -10,8 +10,8 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 /**
- * This is the central component for holding the chain of blocks. It will store transactions that will be added to the next block and
- * it also has some helper methods for adding new blocks and nodes to the chain.
+ * Central component for holding the chain (which contains all the blocks). It will store transactions that will be added to the next block
+ * and it also has some helper methods for adding new blocks and nodes to the chain.
  *
  * @author Veiko Soomets
  */
