@@ -4,6 +4,7 @@ import ee.lhv.application.chain.ChainService;
 import ee.lhv.application.transaction.TransactionService;
 import ee.lhv.domain.block.Block;
 import ee.lhv.domain.chain.Chain;
+import ee.lhv.domain.transaction.Transaction;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.util.Map;
@@ -34,8 +35,8 @@ public class BlockchainController {
     }
 
     @PostMapping("/transactions/new")
-    public void addTransaction(@RequestBody Map<String, String> body) {
-        transactionService.addTransaction(body.get("sender"), body.get("recipient"), new BigDecimal(body.get("amount")));
+    public Transaction addTransaction(@RequestBody Map<String, String> body) {
+        return transactionService.addTransaction(body.get("sender"), body.get("recipient"), new BigDecimal(body.get("amount")));
     }
 
     @GetMapping("/chain")
