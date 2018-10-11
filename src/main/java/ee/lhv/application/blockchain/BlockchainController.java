@@ -22,6 +22,7 @@ public class BlockchainController {
     @Resource
     ChainService chainService;
 
+    // TODO: Should be implemented
     @GetMapping("/mine")
     public Block mine() {
         return null;
