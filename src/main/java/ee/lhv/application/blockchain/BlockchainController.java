@@ -7,8 +7,10 @@ import ee.lhv.domain.chain.Chain;
 import ee.lhv.domain.transaction.Transaction;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+import jdk.nashorn.internal.objects.annotations.Getter;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,9 +31,14 @@ public class BlockchainController {
         return null;
     }
 
-    @GetMapping("nodes/resolve")
+    @GetMapping("/nodes/resolve")
     public void resolveConsensus() throws URISyntaxException {
         chainService.resolveConflicts();
+    }
+
+    @GetMapping("/transactions")
+    public List<Transaction> getTransactions() {
+        return transactionService.getTransactions();
     }
 
     @PostMapping("/transactions/new")

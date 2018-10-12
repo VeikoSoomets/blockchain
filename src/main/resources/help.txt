@@ -1,0 +1,80 @@
+Some helper functions:
+
+BiPredicate<String, Integer> leadingNumbersEqualZero = (str, i) -> {
+    String comparableString = "";
+    for (int j=0; j<i; j++) {
+        comparableString += "0";
+    }
+    return str.substring(str.length() - (i + 1), str.length() - 1).equals(comparableString);
+};
+
+package com.veiko.application.chain;
+
+import com.veiko.application.blockchain.BlockchainService;
+import com.veiko.application.proofofwork.ProofOfWorkService;
+import com.veiko.domain.block.Block;
+import com.veiko.domain.blockchain.Blockchain;
+import com.veiko.domain.chain.Chain;
+import com.veiko.domain.node.Node;
+import com.veiko.domain.proofofwork.ProofOfWork;
+import com.veiko.domain.util.HashGenerator;
+import java.net.URISyntaxException;
+import java.util.List;
+import javax.annotation.Resource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+@Service
+public class ChainService {
+    @Resource
+    BlockchainService blockchainService;
+    @Resource
+    ProofOfWorkService proofOfWorkService;
+
+    public boolean resolveConflicts() throws URISyntaxException {
+        Blockchain blockchain = blockchainService.get();
+        List<Node> nodes = blockchain.getNodes();
+        // We're looking for chains longer than ours
+        Chain longerNodeChain = null;
+        // We initialize longest chain with our chain length
+        int longestChainLength = blockchain.getChain().getBlocks().size();
+        RestTemplate restTemplate = new RestTemplate();
+        for (Node node: nodes) {
+            ResponseEntity<Chain> response = restTemplate.getForEntity(node.getUrl().toString() + "/chain", Chain.class);
+            Chain nodeChain = response.getBody();
+            if (nodeChain.getBlocks().size() > longestChainLength && isValidChain()) {
+                longerNodeChain = nodeChain;
+                longestChainLength = nodeChain.getBlocks().size();
+            }
+        }
+        if (longerNodeChain != null) {
+            blockchainService.get().setChain(longerNodeChain);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean isValidChain() {
+        List<Block> blocks = blockchainService.get().getChain().getBlocks();
+        Block lastBlock = blocks.get(0);
+        int currentBlockIndex = 1;
+        while (currentBlockIndex < blocks.size()) {
+            Block currentBlock = blocks.get(currentBlockIndex);
+            // Check if current hash in block is correct
+            if (!currentBlock.getPreviousHash().equals(HashGenerator.createHash(lastBlock))) {
+                return false;
+            }
+            ProofOfWork proofOfWork = new ProofOfWork(lastBlock.getProof());
+            proofOfWork.setNewProof(currentBlock.getProof());
+            // Check that proofofwork is correct
+            if (!proofOfWorkService.isValidProofOfWork(proofOfWork)) {
+                return false;
+            }
+            lastBlock = currentBlock;
+            currentBlockIndex += 1;
+        }
+        return true;
+    }
+}

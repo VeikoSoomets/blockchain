@@ -19,6 +19,7 @@ public class BlockchainService {
                                 blockchain.getTransactions(),
                                 proof,
                                 previousHash);
+        // Every time we add a block we need to reset the list of transactions that will be put to the next block
         blockchain.initTransactions();
         blockchain.getChain().addBlock(block);
         return block;
